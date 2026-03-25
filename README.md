@@ -23,7 +23,7 @@ It enables users to query domain-specific knowledge with accurate, context-aware
 - Context-aware LLM responses
 - Lightweight and deployable
 
-## Use Case
+## Use Cases
 - Enterprise knowledge assistant
 - Research document Q&A
 - Domain-specific chatbot
