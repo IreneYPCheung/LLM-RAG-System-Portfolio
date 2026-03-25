@@ -1,4 +1,6 @@
-# Free Enterprise RAG Knowledge Assistant
+# Enterprise RAG Knowledge Assistant
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-streamlit-app-url.streamlit.app)
 
 ## Overview
 This project implements a fully **FREE** Retrieval-Augmented Generation (RAG) system using open-source embeddings and Google Gemini API. 

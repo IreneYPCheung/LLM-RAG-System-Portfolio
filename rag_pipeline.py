@@ -15,7 +15,7 @@ if api_key:
 else:
     print("Warning: GEMINI_API_KEY not set in environment variables.")
 
-model = genai.GenerativeModel("gemini-pro")
+model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 def load_docs(file_path="data/sample.txt"):
     """Loads text documents from the specified file path."""
@@ -57,7 +57,25 @@ def query_rag(db, question):
     """
 
     try:
-        response = model.generate_content(prompt)
-        return response.text
+        models_to_try = [
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "gemini-1.0-pro"
+        ]
+        
+        errors = []
+        for model_name in models_to_try:
+            try:
+                model = genai.GenerativeModel(model_name)
+                response = model.generate_content(prompt)
+                return response.text
+            except Exception as e:
+                errors.append(f"- {model_name}: {e}")
+                continue
+                
+        error_msg = "\n".join(errors)
+        return f"Error connecting to models. Details:\n{error_msg}"
     except Exception as e:
-        return f"Error generating response: {e}"
+        return f"Unexpected Error: {e}"
