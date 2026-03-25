@@ -3,6 +3,16 @@ from rag_pipeline import load_docs, create_vector_db, query_rag
 
 st.set_page_config(page_title="Enterprise RAG Assistant", page_icon="🏢", layout="wide")
 
+# Hide all Streamlit branding and default headers/footers
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 with st.sidebar:
     st.header("⚙️ Core Architecture")
     st.markdown("""
