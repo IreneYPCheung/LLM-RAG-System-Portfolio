@@ -73,7 +73,3 @@ streamlit run app.py
 - Multi-document folder support
 - Persistent database implementation
 - API deployment via FastAPI
-
-## Author
-**Irene Cheung, PhD, SMIEEE**  
-AI Leader | Machine Learning • LLM • AI Agents • Computer Vision
