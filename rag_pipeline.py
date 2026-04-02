@@ -17,7 +17,7 @@ else:
 
 model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
-def load_docs(file_path="data/sample.txt"):
+def load_docs(file_path):
     """Loads documents from the specified file path."""
     try:
         if file_path.endswith('.pdf'):

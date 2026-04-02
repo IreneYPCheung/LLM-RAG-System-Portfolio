@@ -30,14 +30,9 @@ with st.sidebar:
 st.title("🏢 Enterprise Knowledge Assistant")
 st.markdown("A robust AI assistant integrating semantic document retrieval to provide highly accurate, domain-specific answers.")
 
-@st.cache_resource
-def setup_default():
-    docs = load_docs()
-    db = create_vector_db(docs)
-    return db, docs
-
 db = None
 current_docs = None
+
 if uploaded_file is not None:
     # Save uploaded file to a temporary file so Langchain can process it
     with st.spinner("Processing document..."):
@@ -57,7 +52,7 @@ if uploaded_file is not None:
             pass
         st.sidebar.success("Document mapped to Vector DB!")
 else:
-    db, current_docs = setup_default()
+    st.info("👈 Please upload a PDF or TXT document in the sidebar to initialize the Knowledge Base.")
 
 with st.sidebar.expander("👀 View Extracted Document Text"):
     if current_docs:
