@@ -34,9 +34,10 @@ st.markdown("A robust AI assistant integrating semantic document retrieval to pr
 def setup_default():
     docs = load_docs()
     db = create_vector_db(docs)
-    return db
+    return db, docs
 
 db = None
+current_docs = None
 if uploaded_file is not None:
     # Save uploaded file to a temporary file so Langchain can process it
     with st.spinner("Processing document..."):
@@ -46,8 +47,8 @@ if uploaded_file is not None:
             tmp_file.write(uploaded_file.getvalue())
             tmp_file_path = tmp_file.name
         
-        docs = load_docs(tmp_file_path)
-        db = create_vector_db(docs)
+        current_docs = load_docs(tmp_file_path)
+        db = create_vector_db(current_docs)
         
         # Cleanup
         try:
@@ -56,7 +57,16 @@ if uploaded_file is not None:
             pass
         st.sidebar.success("Document mapped to Vector DB!")
 else:
-    db = setup_default()
+    db, current_docs = setup_default()
+
+with st.sidebar.expander("👀 View Extracted Document Text"):
+    if current_docs:
+        all_text = "\n\n---\n\n".join([doc.page_content for doc in current_docs])
+        st.caption(f"Total Pages/Chunks: {len(current_docs)}")
+        # Use markdown with a code block so it scrolls nicely and doesn't break formatting
+        st.markdown(f"```text\n{all_text}\n```")
+    else:
+        st.caption("No document loaded.")
 
 query = st.text_input("Ask a question about the knowledge base:")
 
