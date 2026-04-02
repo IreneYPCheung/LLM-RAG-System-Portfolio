@@ -1,6 +1,6 @@
 import os
 import google.generativeai as genai
-from langchain_community.document_loaders import TextLoader
+from langchain_community.document_loaders import TextLoader, PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from dotenv import load_dotenv
@@ -18,12 +18,15 @@ else:
 model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 def load_docs(file_path="data/sample.txt"):
-    """Loads text documents from the specified file path."""
+    """Loads documents from the specified file path."""
     try:
-        loader = TextLoader(file_path, encoding="utf-8")
+        if file_path.endswith('.pdf'):
+            loader = PyPDFLoader(file_path)
+        else:
+            loader = TextLoader(file_path, encoding="utf-8")
         return loader.load()
-    except FileNotFoundError:
-        print(f"Error: {file_path} not found.")
+    except Exception as e:
+        print(f"Error loading {file_path}: {e}")
         return []
 
 def create_vector_db(docs):

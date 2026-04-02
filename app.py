@@ -1,3 +1,5 @@
+import os
+import tempfile
 import streamlit as st
 from rag_pipeline import load_docs, create_vector_db, query_rag
 
@@ -20,19 +22,43 @@ with st.sidebar:
     """)
     st.markdown("---")
     st.caption("**Key Components**:\n * **Frontend:** Streamlit\n * **Vector DB:** FAISS CPU\n * **Embeddings:** HuggingFace `sentence-transformers`\n * **LLM Engine:** Google Gemini AI")
+    
+    st.markdown("---")
+    st.header("📄 Custom Knowledge Base")
+    uploaded_file = st.file_uploader("Upload your own PDF or TXT to query against:", type=["txt", "pdf"])
 
 st.title("🏢 Enterprise Knowledge Assistant")
 st.markdown("A robust AI assistant integrating semantic document retrieval to provide highly accurate, domain-specific answers.")
 
 @st.cache_resource
-def setup():
+def setup_default():
     docs = load_docs()
     db = create_vector_db(docs)
     return db
 
-db = setup()
+db = None
+if uploaded_file is not None:
+    # Save uploaded file to a temporary file so Langchain can process it
+    with st.spinner("Processing document..."):
+        # Extract extension
+        ext = uploaded_file.name.split('.')[-1]
+        with tempfile.NamedTemporaryFile(delete=False, suffix=f".{ext}") as tmp_file:
+            tmp_file.write(uploaded_file.getvalue())
+            tmp_file_path = tmp_file.name
+        
+        docs = load_docs(tmp_file_path)
+        db = create_vector_db(docs)
+        
+        # Cleanup
+        try:
+            os.remove(tmp_file_path)
+        except Exception:
+            pass
+        st.sidebar.success("Document mapped to Vector DB!")
+else:
+    db = setup_default()
 
-query = st.text_input("Ask a question about textiles and fibers:")
+query = st.text_input("Ask a question about the knowledge base:")
 
 if query:
     if not db:
